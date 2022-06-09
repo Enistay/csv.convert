@@ -15,13 +15,38 @@ correctness of that program.
 7. Interface Segregation - small client-specific interfaces are better than one general-purpose interface.
 8. Dependency Inversion - use interfaces instead of concrete implementations.
 
-![image](https://user-images.githubusercontent.com/4419209/172831170-38f3694b-a76b-43c8-8036-c7537ee3a6d4.png)
+```csharp
+csv.convert/Program.cs
+
+using csv.convert.console;
+using Microsoft.Extensions.DependencyInjection;
+
+var serviceProvider = new ServiceCollection()
+           .AddSingleton<IConvertSelector, ConvertSelector>()
+           .BuildServiceProvider();
+
+FileBase fileCsvToJson = new FileBase { NameFile = "json 20", 
+                                        Path = @"C:\Users\nstay\source\repos\csv.convert\csv.convert\upload\city.csv", 
+                                        MimeType = MimeTypeFileEnum.Json
+                                        };
+
+Console.WriteLine(serviceProvider.GetService<IConvertSelector>()
+            .SelectConverter(fileCsvToJson.MimeType)
+            .Convert(fileCsvToJson));
+```
 
 ![image](https://user-images.githubusercontent.com/4419209/172831470-7a4161ce-0190-4d7e-b0ab-96adfaf130e4.png)
 
 ![image](https://user-images.githubusercontent.com/4419209/172832043-e203dbfd-ee79-425d-b4b2-2a57eb4357c6.png)
 Note: Json have an object "address" that was separated and grouped
 
-```rb
-# csv.convert/upload/city.csv
+
+
+
+```csv
+csv.convert/upload/city.csv
+
+name,address_line1,address_line2
+Dave,Street,Town
+Jhon,45,City
 ```
